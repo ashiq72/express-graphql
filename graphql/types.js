@@ -11,6 +11,8 @@ const {
   GraphQLScalarType,
 } = require("graphql");
 
+const { users } = require("../data");
+
 // Gender enum type
 const GenderEnumType = new GraphQLEnumType({
   name: "GenderEnumType",
@@ -59,7 +61,19 @@ const RootQueryType = new GraphQLObjectType({
     users: {
       type: new GraphQLList(new GraphQLNonNull(UserType)),
       resolve: () => {
-        return Users;
+        return users;
+      },
+    },
+    user: {
+      type: UserType,
+      args: {
+        id: {
+          type: GraphQLID,
+        },
+      },
+      resolve: (_, { id }) => {
+        const user = users.find((user) => user.id == id);
+        return user;
       },
     },
   }),
